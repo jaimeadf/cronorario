@@ -1,0 +1,16 @@
+{
+  "name": "cronorario",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "website:dev": "nx dev website",
+    "website:build": "nx build website"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "nx": "^19.7.3"
+  }
+}
