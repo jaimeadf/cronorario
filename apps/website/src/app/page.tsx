@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { Search, Calendar, CheckCircle, GitHub, Sun } from "react-feather";
 
 import { Header } from "./_components/header";
@@ -7,7 +8,7 @@ import { Header } from "./_components/header";
 import { ClassCatalog } from "./_components/class-catalog";
 import { MyClasses } from "./_components/my-classes";
 
-import { useState } from "react";
+import { ClassesProvider } from "./_contexts/classes-context";
 
 enum TabId {
   Catalog,
@@ -44,9 +45,11 @@ export default function Home() {
           <Header.Tab icon={CheckCircle} id={TabId.MyClasses} badge={4} />
         </Header.TabBar>
       </Header>
-      <main>
-        <SelectedTab />
-      </main>
+      <ClassesProvider>
+        <main>
+          <SelectedTab />
+        </main>
+      </ClassesProvider>
     </div>
   );
 }

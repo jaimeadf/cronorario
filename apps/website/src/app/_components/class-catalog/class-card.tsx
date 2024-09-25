@@ -1,5 +1,15 @@
-import { cn } from "@/lib/utils";
 import { ReactNode } from "react";
+
+import { cn } from "@/lib/utils";
+import { CourseClass } from "../../_contexts/classes-context";
+
+interface ClassScheduleProps {
+  information: CourseClass;
+}
+
+interface ClassCardProps {
+  information: CourseClass;
+}
 
 interface ClassSectionProps {
   children?: ReactNode;
@@ -16,46 +26,52 @@ function ClassSection({ children, className, title }: ClassSectionProps) {
   );
 }
 
-function ClassSchedule() {
+function ClassSchedule({ information }: ClassScheduleProps) {
   return (
     <table className="max-w-80 text-nowrap">
       <tbody>
-        <tr>
-          <td>Segunda-feira</td>
-          <td className="w-full text-center">16:30 - 18:30</td>
-          <td>Prática</td>
-        </tr>
+        {information.schedule.map(s => (
+          <tr>
+            <td>{s.weekDay}</td>
+            <td className="w-full text-center">{s.startTime} - {s.endTime}</td>
+            <td>{s.type}</td>
+          </tr>
+        ))}
       </tbody>
     </table>
   );
 }
 
-export function ClassCard() {
+export function ClassCard({ information }: ClassCardProps) {
   return (
     <div className="rounded-lg border border-primary">
       <div className="flex justify-between items-center p-4 border-b border-primary">
-        <h4>Turma A</h4>
+        <h4>{information.code}</h4>
         <div className="size-8 rounded-lg bg-tertiary" />
       </div>
       <div className="grid grid-cols-2 gap-4 p-4">
         <ClassSection className="col-span-full" title="Curso">
-          Ciência da Computação
+          {information.course.name}
+
         </ClassSection>
         <ClassSection className="col-span-full" title="Estrutura">
-          4º semestre
+          {information.idealPeriod}º semestre
         </ClassSection>
         <ClassSection title="Vagas ofertadas">
-          40
+          {information.oferredSeats}
         </ClassSection>
         <ClassSection title="Vagas ocupadas">
-          12
+          {information.occupiedSeats}
         </ClassSection>
         <ClassSection className="col-span-full" title="Docentes">
-          Steve No Jobs <br />
-          Zuker Markberg <br />
+          <ul>
+            {information.teachers.map(teacher => (
+              <li>{teacher.name}</li>
+            ))}
+          </ul>
         </ClassSection>
         <ClassSection className="col-span-full" title="Horários">
-          <ClassSchedule />
+          <ClassSchedule information={information} />
         </ClassSection>
       </div>
     </div>

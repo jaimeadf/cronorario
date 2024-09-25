@@ -5,12 +5,15 @@ import { cn } from "@/lib/utils";
 
 import { ClassCard } from "./class-card";
 
+import { CourseClass } from "../../_contexts/classes-context";
+
 interface ClassAccordionProps {
-  title?: ReactNode;
-  subtitle?: ReactNode;
+  title: ReactNode;
+  subtitle: ReactNode;
+  classes: CourseClass[];
 };
 
-export function ClassAccordion({ title, subtitle }: ClassAccordionProps) {
+export function ClassAccordion({ title, subtitle, classes }: ClassAccordionProps) {
   const [expand, setExpanded] = useState(false);
 
   function toggle() {
@@ -29,9 +32,7 @@ export function ClassAccordion({ title, subtitle }: ClassAccordionProps) {
       <div className={cn("grid grid-rows-[0fr] overflow-hidden opacity-0 transition-all duration-300 ease-in-out", { "grid-rows-[1fr] opacity-100": expand })}>
         <div className="overflow-hidden">
           <div className="grid grid-cols-[repeat(auto-fill,minmax(18rem,1fr))] gap-8 pb-8">
-            <ClassCard />
-            <ClassCard />
-            <ClassCard />
+            {classes.map(c => <ClassCard information={c} />)}
           </div>
         </div>
       </div>
