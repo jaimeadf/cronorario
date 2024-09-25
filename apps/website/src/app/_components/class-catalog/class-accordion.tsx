@@ -32,7 +32,7 @@ export function ClassAccordion({ title, subtitle, classes }: ClassAccordionProps
       <div className={cn("grid grid-rows-[0fr] overflow-hidden opacity-0 transition-all duration-300 ease-in-out", { "grid-rows-[1fr] opacity-100": expand })}>
         <div className="overflow-hidden">
           <div className="grid grid-cols-[repeat(auto-fill,minmax(18rem,1fr))] gap-8 pb-8">
-            {classes.map(c => <ClassCard information={c} />)}
+            {classes.map(c => <ClassCard key={c.id} information={c} />)}
           </div>
         </div>
       </div>

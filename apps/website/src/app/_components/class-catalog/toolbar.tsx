@@ -1,4 +1,3 @@
-import { useRef, useState } from "react";
 import { Database, MapPin, Sliders } from "react-feather";
 
 import { cn } from "@/lib/utils";

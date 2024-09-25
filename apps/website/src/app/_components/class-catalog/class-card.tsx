@@ -31,7 +31,7 @@ function ClassSchedule({ information }: ClassScheduleProps) {
     <table className="max-w-80 text-nowrap">
       <tbody>
         {information.schedule.map(s => (
-          <tr>
+          <tr key={s.id}>
             <td>{s.weekDay}</td>
             <td className="w-full text-center">{s.startTime} - {s.endTime}</td>
             <td>{s.type}</td>
@@ -66,7 +66,7 @@ export function ClassCard({ information }: ClassCardProps) {
         <ClassSection className="col-span-full" title="Docentes">
           <ul>
             {information.teachers.map(teacher => (
-              <li>{teacher.name}</li>
+              <li key={teacher.id}>{teacher.name}</li>
             ))}
           </ul>
         </ClassSection>

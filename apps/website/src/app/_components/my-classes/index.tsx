@@ -4,7 +4,7 @@ export function SelectedClass() {
   return (
     <div className="flex items-center gap-2 w-full px-2 py-4 border-b border-secondary">
       <div className="flex-1 flex flex-col gap-0.5 text-primary">
-        <h2 className="font-medium">Cálculo "A"</h2>
+        <h2 className="font-medium">Cálculo &quot;A&quot;</h2>
         <h3 className="text-sm">Turma CC</h3>
       </div>
       <button className="rounded-lg text-primary bg-primary hover:bg-primary-hover">

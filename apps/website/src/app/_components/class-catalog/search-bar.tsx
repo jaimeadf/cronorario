@@ -45,10 +45,10 @@ export function SearchBar() {
   const containerRef = useRef<HTMLDivElement | null>(null);
 
   function open() {
-    const rect = containerRef?.current?.getBoundingClientRect()!;
+    const rect = containerRef?.current?.getBoundingClientRect();
     
     setExpand(true);
-    setContainerOffset(rect.top);
+    setContainerOffset(rect?.top ?? 0);
   }
 
   function close() {
