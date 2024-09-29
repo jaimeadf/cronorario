@@ -1,6 +1,6 @@
 import { Trash } from "react-feather";
 
-export function SelectedClass() {
+export function MyClass() {
   return (
     <div className="flex items-center gap-2 w-full px-2 py-4 border-b border-secondary">
       <div className="flex-1 flex flex-col gap-0.5 text-primary">
@@ -22,9 +22,9 @@ export function MyClasses() {
         <button className="text-brand font-medium">Limpar</button>
       </div>
       <div className="border-t border-secondary">
-        <SelectedClass />
-        <SelectedClass />
-        <SelectedClass />
+        <MyClass />
+        <MyClass />
+        <MyClass />
       </div>
     </div>
   );

@@ -22,7 +22,7 @@ interface TabProps {
   badge?: ReactNode;
 }
 
-const TabBarContext = createContext<TabBarContextProps | null>(null);
+const TabBarContext = createContext({} as TabBarContextProps);
 
 export function TabBar({ children, selectedTabId, onTabSelect }: TabBarProps) {
   return (
@@ -35,7 +35,7 @@ export function TabBar({ children, selectedTabId, onTabSelect }: TabBarProps) {
 }
 
 export function Tab({ id, icon, badge }: TabProps) {
-  const { selectedTabId, onTabSelect } = useContext(TabBarContext)!;
+  const { selectedTabId, onTabSelect } = useContext(TabBarContext);
   const Icon = icon;
 
   const selected = selectedTabId == id;

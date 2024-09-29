@@ -1,4 +1,4 @@
-import { type ButtonHTMLAttributes, type ReactNode, useState } from "react";
+import { type ButtonHTMLAttributes, HTMLAttributes, type ReactNode, useState } from "react";
 import Link, { type LinkProps } from "next/link";
 import { Icon, Menu, X } from "react-feather";
 
@@ -9,13 +9,27 @@ interface HamburgerMenuProps {
   children?: ReactNode;
 }
 
+interface HamburgerMenuButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+  icon: Icon;
+}
+
 interface HamburgerMenuItemProps {
   icon: Icon;
   label: string;
 }
 
-type HamburgerMenuButtonProps = HamburgerMenuItemProps & ButtonHTMLAttributes<HTMLButtonElement>;
+type HamburgerMenuActionProps = HamburgerMenuItemProps & ButtonHTMLAttributes<HTMLButtonElement>;
 type HamburgerMenuLinkProps = HamburgerMenuItemProps & LinkProps & Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, keyof LinkProps> & LinkProps;
+
+function HamburgerMenuButton({ icon, className, ...props }: HamburgerMenuButtonProps) {
+  const Icon = icon;
+
+  return (
+    <button {...props} className={cn("p-2 rounded-lg bg-primary hover:bg-primary-hover", className)}>
+      <Icon className="size-6 text-primary" />
+    </button>
+  );
+}
 
 function HamburgerMenuItem({ icon, label }: HamburgerMenuItemProps) {
   const Icon = icon;
@@ -30,7 +44,7 @@ function HamburgerMenuItem({ icon, label }: HamburgerMenuItemProps) {
   );
 }
 
-function HamburgerMenuLink({ icon, label, ...props }: HamburgerMenuLinkProps) {
+function HamburgerMenuLinkItem({ icon, label, ...props }: HamburgerMenuLinkProps) {
   return (
     <Link {...props}>
       <HamburgerMenuItem icon={icon} label={label} />
@@ -38,7 +52,7 @@ function HamburgerMenuLink({ icon, label, ...props }: HamburgerMenuLinkProps) {
   );
 }
 
-function HamburgerMenuButton({ icon, label, ...props }: HamburgerMenuButtonProps) {
+function HamburgerMenuButtonItem({ icon, label, ...props }: HamburgerMenuActionProps) {
   return (
     <button {...props}>
       <HamburgerMenuItem icon={icon} label={label} />
@@ -55,9 +69,7 @@ export function HamburgerMenu({ children }: HamburgerMenuProps) {
 
   return (
     <div>
-      <button className="p-2 rounded-lg text-primary bg-primary hover:bg-primary-hover" onClick={toggle}>
-        <Menu className="size-6" />
-      </button>
+      <HamburgerMenuButton icon={Menu} onClick={toggle} />
       <div
         className={cn(
           "fixed inset-0 z-50 w-screen h-screen opacity-0 pointer-events-none transition-all duration-100 bg-primary",
@@ -65,9 +77,7 @@ export function HamburgerMenu({ children }: HamburgerMenuProps) {
         )}
       >
         <div className="p-2">
-          <button className="p-2 rounded-lg text-primary bg-primary hover:bg-primary-hover" onClick={toggle}>
-            <X className="size-6" />
-          </button>
+          <HamburgerMenuButton icon={X} onClick={toggle} />
         </div>
         <div className="p-2">
           <div className="flex flex-col border-t border-secondary">
@@ -79,5 +89,5 @@ export function HamburgerMenu({ children }: HamburgerMenuProps) {
   );
 }
 
-HamburgerMenu.Button = HamburgerMenuButton;
-HamburgerMenu.Link = HamburgerMenuLink;
+HamburgerMenu.ButtonItem = HamburgerMenuButtonItem;
+HamburgerMenu.LinkItem = HamburgerMenuLinkItem;

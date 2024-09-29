@@ -57,18 +57,17 @@ export function SearchBar() {
   }
 
   return (
-    <div className="relative h-14">
+    <div ref={containerRef} className="relative h-14">
       <div
-        ref={containerRef}
         className={cn(
-          "-translate-y-[var(--container-offset)] transition-transform duration-100 ease-linear",
+          "transition-transform duration-100 ease-linear",
           { "absolute w-[calc(var(--vvw)*100)] h-[calc(var(--vvh)*100)]": expand }
         )}
-        style={{ "--container-offset": `${containerOffset}px` } as CSSProperties}
+        style={{ "transform": `translateY(-${containerOffset}px)` }}
       >
         <div
           className={cn(
-            "z-50 relative h-full max-h-14 overflow-hidden overscroll-contain bg-primary transition-all duration-100 ease-linear",
+            "relative z-50 h-full max-h-14 overflow-hidden overscroll-contain bg-primary transition-all duration-100 ease-linear",
             { "max-h-[calc(var(--vvh)*100)] overflow-scroll": expand }
           )}
         >

@@ -35,8 +35,8 @@ export default function Home() {
     <div>
       <Header>
         <Header.Menu>
-          <Header.Menu.Link icon={GitHub} label="GitHub" href="https://github.com/jaimeadf/cronorario" target="_blank" />
-          <Header.Menu.Button icon={Sun} label="Modo Escuro" />
+          <Header.Menu.LinkItem icon={GitHub} label="GitHub" href="https://github.com/jaimeadf/cronorario" target="_blank" />
+          <Header.Menu.ButtonItem icon={Sun} label="Modo Escuro" />
         </Header.Menu>
         <Header.Logo />
         <Header.TabBar selectedTabId={selectedTabId} onTabSelect={handleTabSelect}>

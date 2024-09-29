@@ -30,8 +30,8 @@ function SearchSuggestion({ className, icon, label }: SearchSuggestionProps) {
   const Icon = icon;
   
   return (
-    <div className={cn(
-      "group border-b border-secondary hover:outline hover:outline-bg-primary hover:border-transparent",
+    <button className={cn(
+      "group border-b border-secondary hover:border-transparent hover:outline hover:outline-bg-primary",
       className
       )}
     >
@@ -39,7 +39,7 @@ function SearchSuggestion({ className, icon, label }: SearchSuggestionProps) {
         <Icon className="size-6 text-brand" />
         <div className="text-primary">{label}</div>
       </div>
-    </div>
+    </button>
   );
 }
 

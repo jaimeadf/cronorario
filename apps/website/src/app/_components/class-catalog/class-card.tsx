@@ -19,7 +19,7 @@ interface ClassSectionProps {
 
 function ClassSection({ children, className, title }: ClassSectionProps) {
   return (
-    <div className={cn("text-sm", className)}>
+    <div className={cn("text-sm text-primary", className)}>
       <h5 className="mb-0.5 font-semibold">{title}</h5>
       <div>{children}</div>
     </div>
@@ -46,13 +46,12 @@ export function ClassCard({ information }: ClassCardProps) {
   return (
     <div className="rounded-lg border border-primary">
       <div className="flex justify-between items-center p-4 border-b border-primary">
-        <h4>{information.code}</h4>
+        <h4 className="text-primary">Turma {information.code}</h4>
         <div className="size-8 rounded-lg bg-tertiary" />
       </div>
       <div className="grid grid-cols-2 gap-4 p-4">
         <ClassSection className="col-span-full" title="Curso">
           {information.course.name}
-
         </ClassSection>
         <ClassSection className="col-span-full" title="Estrutura">
           {information.idealPeriod}º semestre
@@ -75,5 +74,5 @@ export function ClassCard({ information }: ClassCardProps) {
         </ClassSection>
       </div>
     </div>
-  )  
+  );
 }
