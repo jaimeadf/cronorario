@@ -4,9 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "website:dev": "nx dev website",
-    "website:build": "nx build website",
-    "website:lint": "nx lint website"
+    "website:dev": "nx run website:dev",
+    "website:build": "nx run website:build",
+    "website:lint": "nx run website:lint",
+    "website:format": "nx run website:format"
   },
   "keywords": [],
   "author": "",
