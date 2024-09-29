@@ -7,13 +7,13 @@ import { FilterBar, FilterButton, FilterDropdown } from "./filter-bar";
 
 export function Toolbar() {
   return (
-      <div className={cn("z-10 sticky inset-0 pb-2 bg-primary")}>
-        <SearchBar />
-        <FilterBar>
-          <FilterButton icon={Sliders} value="Filtros" />
-          <FilterDropdown icon={Database} value="2023 - 2" />
-          <FilterDropdown icon={MapPin} value="Campus Camobi - Santa Maria" />
-        </FilterBar>
-      </div>
+    <div className={cn("sticky inset-0 z-10 bg-primary pb-2")}>
+      <SearchBar />
+      <FilterBar>
+        <FilterButton icon={Sliders} value="Filtros" />
+        <FilterDropdown icon={Database} value="2023 - 2" />
+        <FilterDropdown icon={MapPin} value="Campus Camobi - Santa Maria" />
+      </FilterBar>
+    </div>
   );
 }

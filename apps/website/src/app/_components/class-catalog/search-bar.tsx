@@ -13,23 +13,23 @@ interface SearchInputProps {
 
 function SearchInput({ expand, onFocus, onBlur }: SearchInputProps) {
   return (
-    <div className="sticky inset-0 flex p-2 bg-primary">
-      <div className="flex-1 relative">
-        <div className="absolute inset-y-0 flex items-center pl-2 pointer-events-none">
+    <div className="sticky inset-0 flex bg-primary p-2">
+      <div className="relative flex-1">
+        <div className="pointer-events-none absolute inset-y-0 flex items-center pl-2">
           <Search className="size-6 text-primary" />
         </div>
         <input
           type="text"
           placeholder="Cursos, disciplinas, docentes..."
-          className="block w-full h-10 p-2 pl-10 rounded-lg text-base text-primary bg-tertiary placeholder:text-tertiary focus:outline-none"
+          className="block h-10 w-full rounded-lg bg-tertiary p-2 pl-10 text-base text-primary placeholder:text-tertiary focus:outline-none"
           onFocus={onFocus}
           onBlurCapture={onBlur}
         />
       </div>
       <button
         className={cn(
-          "text-brand max-w-0 overflow-hidden transition-all duration-100 ease-linear",
-          { "max-w-20": expand }
+          "max-w-0 overflow-hidden text-brand transition-all duration-100 ease-linear",
+          { "max-w-20": expand },
         )}
       >
         <span className="pl-2">Cancelar</span>
@@ -46,7 +46,7 @@ export function SearchBar() {
 
   function open() {
     const rect = containerRef?.current?.getBoundingClientRect();
-    
+
     setExpand(true);
     setContainerOffset(rect?.top ?? 0);
   }
@@ -59,16 +59,16 @@ export function SearchBar() {
   return (
     <div ref={containerRef} className="relative h-14">
       <div
-        className={cn(
-          "transition-transform duration-100 ease-linear",
-          { "absolute w-[calc(var(--vvw)*100)] h-[calc(var(--vvh)*100)]": expand }
-        )}
-        style={{ "transform": `translateY(-${containerOffset}px)` }}
+        className={cn("transition-transform duration-100 ease-linear", {
+          "absolute h-[calc(var(--vvh)*100)] w-[calc(var(--vvw)*100)]": expand,
+        })}
+        style={{ transform: `translateY(-${containerOffset}px)` }}
       >
         <div
           className={cn(
-            "relative z-50 h-full max-h-14 overflow-hidden overscroll-contain bg-primary transition-all duration-100 ease-linear",
-            { "max-h-[calc(var(--vvh)*100)] overflow-scroll": expand }
+            "relative z-50 h-full max-h-14 overflow-hidden overscroll-contain bg-primary",
+            "transition-all duration-100 ease-linear",
+            { "max-h-[calc(var(--vvh)*100)] overflow-scroll": expand },
           )}
         >
           <SearchInput expand={expand} onFocus={open} onBlur={close} />

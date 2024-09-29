@@ -21,14 +21,14 @@ export function ClassCatalog() {
       groups[c.subject.id].push(c);
     }
 
-    console.log(groups)
+    console.log(groups);
 
     setGroups(groups);
-  }, [classes])
+  }, [classes]);
 
   return (
     <div>
-      <Toolbar /> 
+      <Toolbar />
       <div className="p-2">
         <div className="w-full border-t border-secondary">
           {Object.entries(groups).map(([subjectId, group = []]) => (
@@ -42,5 +42,5 @@ export function ClassCatalog() {
         </div>
       </div>
     </div>
-  )
+  );
 }

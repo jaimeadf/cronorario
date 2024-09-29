@@ -13,13 +13,13 @@ import { ClassesProvider } from "./_contexts/classes-context";
 enum TabId {
   Catalog,
   MySchedule,
-  MyClasses
-};
+  MyClasses,
+}
 
 const tabs = {
   [TabId.Catalog]: ClassCatalog,
   [TabId.MyClasses]: MyClasses,
-  [TabId.MySchedule]: () => null
+  [TabId.MySchedule]: () => null,
 };
 
 export default function Home() {
@@ -35,11 +35,19 @@ export default function Home() {
     <div>
       <Header>
         <Header.Menu>
-          <Header.Menu.LinkItem icon={GitHub} label="GitHub" href="https://github.com/jaimeadf/cronorario" target="_blank" />
+          <Header.Menu.LinkItem
+            icon={GitHub}
+            label="GitHub"
+            href="https://github.com/jaimeadf/cronorario"
+            target="_blank"
+          />
           <Header.Menu.ButtonItem icon={Sun} label="Modo Escuro" />
         </Header.Menu>
         <Header.Logo />
-        <Header.TabBar selectedTabId={selectedTabId} onTabSelect={handleTabSelect}>
+        <Header.TabBar
+          selectedTabId={selectedTabId}
+          onTabSelect={handleTabSelect}
+        >
           <Header.Tab icon={Search} id={TabId.Catalog} />
           <Header.Tab icon={Calendar} id={TabId.MySchedule} />
           <Header.Tab icon={CheckCircle} id={TabId.MyClasses} badge={4} />

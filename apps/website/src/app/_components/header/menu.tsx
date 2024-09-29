@@ -1,7 +1,6 @@
-import { type ButtonHTMLAttributes, HTMLAttributes, type ReactNode, useState } from "react";
+import { type ButtonHTMLAttributes, type ReactNode, useState } from "react";
 import Link, { type LinkProps } from "next/link";
 import { Icon, Menu, X } from "react-feather";
-
 
 import { cn } from "@/lib/utils";
 
@@ -9,7 +8,8 @@ interface HamburgerMenuProps {
   children?: ReactNode;
 }
 
-interface HamburgerMenuButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+interface HamburgerMenuButtonProps
+  extends ButtonHTMLAttributes<HTMLButtonElement> {
   icon: Icon;
 }
 
@@ -18,14 +18,29 @@ interface HamburgerMenuItemProps {
   label: string;
 }
 
-type HamburgerMenuActionProps = HamburgerMenuItemProps & ButtonHTMLAttributes<HTMLButtonElement>;
-type HamburgerMenuLinkProps = HamburgerMenuItemProps & LinkProps & Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, keyof LinkProps> & LinkProps;
+type HamburgerMenuActionProps = HamburgerMenuItemProps &
+  ButtonHTMLAttributes<HTMLButtonElement>;
 
-function HamburgerMenuButton({ icon, className, ...props }: HamburgerMenuButtonProps) {
+type HamburgerMenuLinkProps = HamburgerMenuItemProps &
+  LinkProps &
+  Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, keyof LinkProps> &
+  LinkProps;
+
+function HamburgerMenuButton({
+  icon,
+  className,
+  ...props
+}: HamburgerMenuButtonProps) {
   const Icon = icon;
 
   return (
-    <button {...props} className={cn("p-2 rounded-lg bg-primary hover:bg-primary-hover", className)}>
+    <button
+      {...props}
+      className={cn(
+        "rounded-lg bg-primary p-2 hover:bg-primary-hover",
+        className,
+      )}
+    >
       <Icon className="size-6 text-primary" />
     </button>
   );
@@ -33,18 +48,22 @@ function HamburgerMenuButton({ icon, className, ...props }: HamburgerMenuButtonP
 
 function HamburgerMenuItem({ icon, label }: HamburgerMenuItemProps) {
   const Icon = icon;
-  
+
   return (
-    <div className="group border-b border-secondary hover:outline hover:outline-bg-primary hover:border-transparent">
-      <div className="flex items-center gap-2 px-2 py-4 rounded-lg bg-primary group-hover:bg-primary-hover">
+    <div className="group border-b border-secondary hover:border-transparent hover:outline hover:outline-bg-primary">
+      <div className="flex items-center gap-2 rounded-lg bg-primary px-2 py-4 group-hover:bg-primary-hover">
         <Icon className="size-6 text-primary" />
-        <div className="font-medium text-nowrap text-primary">{label}</div>
+        <div className="text-nowrap font-medium text-primary">{label}</div>
       </div>
     </div>
   );
 }
 
-function HamburgerMenuLinkItem({ icon, label, ...props }: HamburgerMenuLinkProps) {
+function HamburgerMenuLinkItem({
+  icon,
+  label,
+  ...props
+}: HamburgerMenuLinkProps) {
   return (
     <Link {...props}>
       <HamburgerMenuItem icon={icon} label={label} />
@@ -52,7 +71,11 @@ function HamburgerMenuLinkItem({ icon, label, ...props }: HamburgerMenuLinkProps
   );
 }
 
-function HamburgerMenuButtonItem({ icon, label, ...props }: HamburgerMenuActionProps) {
+function HamburgerMenuButtonItem({
+  icon,
+  label,
+  ...props
+}: HamburgerMenuActionProps) {
   return (
     <button {...props}>
       <HamburgerMenuItem icon={icon} label={label} />
@@ -62,7 +85,7 @@ function HamburgerMenuButtonItem({ icon, label, ...props }: HamburgerMenuActionP
 
 export function HamburgerMenu({ children }: HamburgerMenuProps) {
   const [open, setOpen] = useState(false);
-  
+
   function toggle() {
     setOpen(!open);
   }
@@ -72,8 +95,8 @@ export function HamburgerMenu({ children }: HamburgerMenuProps) {
       <HamburgerMenuButton icon={Menu} onClick={toggle} />
       <div
         className={cn(
-          "fixed inset-0 z-50 w-screen h-screen opacity-0 pointer-events-none transition-all duration-100 bg-primary",
-          { "opacity-100 pointer-events-auto": open }
+          "pointer-events-none fixed inset-0 z-50 h-screen w-screen bg-primary opacity-0 transition-all duration-100",
+          { "pointer-events-auto opacity-100": open },
         )}
       >
         <div className="p-2">

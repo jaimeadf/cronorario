@@ -30,10 +30,12 @@ function ClassSchedule({ information }: ClassScheduleProps) {
   return (
     <table className="max-w-80 text-nowrap">
       <tbody>
-        {information.schedule.map(s => (
+        {information.schedule.map((s) => (
           <tr key={s.id}>
             <td>{s.weekDay}</td>
-            <td className="w-full text-center">{s.startTime} - {s.endTime}</td>
+            <td className="w-full text-center">
+              {s.startTime} - {s.endTime}
+            </td>
             <td>{s.type}</td>
           </tr>
         ))}
@@ -45,7 +47,7 @@ function ClassSchedule({ information }: ClassScheduleProps) {
 export function ClassCard({ information }: ClassCardProps) {
   return (
     <div className="rounded-lg border border-primary">
-      <div className="flex justify-between items-center p-4 border-b border-primary">
+      <div className="flex items-center justify-between border-b border-primary p-4">
         <h4 className="text-primary">Turma {information.code}</h4>
         <div className="size-8 rounded-lg bg-tertiary" />
       </div>
@@ -64,7 +66,7 @@ export function ClassCard({ information }: ClassCardProps) {
         </ClassSection>
         <ClassSection className="col-span-full" title="Docentes">
           <ul>
-            {information.teachers.map(teacher => (
+            {information.teachers.map((teacher) => (
               <li key={teacher.id}>{teacher.name}</li>
             ))}
           </ul>

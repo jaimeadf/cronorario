@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, type ReactNode } from "react"
+import { createContext, useContext, type ReactNode } from "react";
 import { Icon } from "react-feather";
 
 import { cn } from "@/lib/utils";
@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 interface TabBarContextProps {
   selectedTabId?: string | number;
   onTabSelect?: (id: string | number) => void;
-};
+}
 
 interface TabBarProps {
   children?: ReactNode;
@@ -27,7 +27,7 @@ const TabBarContext = createContext({} as TabBarContextProps);
 export function TabBar({ children, selectedTabId, onTabSelect }: TabBarProps) {
   return (
     <TabBarContext.Provider value={{ selectedTabId, onTabSelect }}>
-      <div className="flex gap-2 ml-auto rounded-lg bg-tertiary">
+      <div className="ml-auto flex gap-2 rounded-lg bg-tertiary">
         {children}
       </div>
     </TabBarContext.Provider>
@@ -43,8 +43,9 @@ export function Tab({ id, icon, badge }: TabProps) {
   return (
     <button
       className={cn(
-        "relative rounded-lg text-primary bg-tertiary hover:bg-tertiary-hover",
-        { "text-onbrand bg-brand hover:bg-brand": selected }
+        "relative rounded-lg bg-tertiary text-primary",
+        "hover:bg-tertiary-hover",
+        { "bg-brand text-onbrand hover:bg-brand": selected },
       )}
       onClick={onTabSelect?.bind(null, id)}
     >
@@ -52,10 +53,12 @@ export function Tab({ id, icon, badge }: TabProps) {
       {badge !== undefined && badge !== null && (
         <div
           className={cn(
-            "absolute top-0 right-0 flex items-center justify-center h-4 min-w-4 px-1 rounded-full border",
-            "font-medium text-xs leading-none",
-            "text-onbrand bg-brand border-ontertiary",
-            { "border-onbrand": selected }
+            "absolute right-0 top-0",
+            "flex h-4 min-w-4 items-center justify-center",
+            "rounded-full bg-brand px-1",
+            "border border-ontertiary",
+            "text-xs font-medium leading-none text-onbrand",
+            { "border-onbrand": selected },
           )}
         >
           {badge}

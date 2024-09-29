@@ -21,7 +21,7 @@ interface FilterBarProps {
 
 function FilterPill({ children }: FilterPillProps) {
   return (
-    <button className="shrink-0 flex items-center gap-2 w-fit h-8 px-2 rounded-lg bg-tertiary hover:bg-tertiary-hover">
+    <button className="flex h-8 w-fit shrink-0 items-center gap-2 rounded-lg bg-tertiary px-2 hover:bg-tertiary-hover">
       {children}
     </button>
   );
@@ -33,9 +33,7 @@ export function FilterButton({ icon, value }: FilterButtonProps) {
   return (
     <FilterPill>
       <Icon className="size-4 text-secondary" />
-      <div className="font-medium text-sm text-secondary">
-        {value}
-      </div>
+      <div className="text-sm font-medium text-secondary">{value}</div>
     </FilterPill>
   );
 }
@@ -46,18 +44,12 @@ export function FilterDropdown({ icon, value }: FilterDropdownProps) {
   return (
     <FilterPill>
       <Icon className="size-4 text-secondary" />
-      <div className="font-medium text-sm text-secondary">
-        {value}
-      </div>
+      <div className="text-sm font-medium text-secondary">{value}</div>
       <ChevronDown className="size-4 text-tertiary" />
     </FilterPill>
   );
 }
 
 export function FilterBar({ children }: FilterBarProps) {
-  return (
-    <div className="flex gap-2 px-2 overflow-x-scroll">
-      {children}
-    </div>
-  );
+  return <div className="flex gap-2 overflow-x-scroll px-2">{children}</div>;
 }

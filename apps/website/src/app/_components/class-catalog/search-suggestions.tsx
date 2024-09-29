@@ -20,29 +20,31 @@ interface SearchSuggestionsProps {
 function SearchSection({ title, children }: SearchSectionProps) {
   return (
     <div className="flex flex-col">
-      <div className="p-2 border-b font-medium border-secondary text-primary">{title}</div>
+      <div className="border-b border-secondary p-2 font-medium text-primary">
+        {title}
+      </div>
       {children}
     </div>
-  )
+  );
 }
 
 function SearchSuggestion({ className, icon, label }: SearchSuggestionProps) {
   const Icon = icon;
-  
+
   return (
-    <button className={cn(
-      "group border-b border-secondary hover:border-transparent hover:outline hover:outline-bg-primary",
-      className
+    <button
+      className={cn(
+        "group border-b border-secondary hover:border-transparent hover:outline hover:outline-bg-primary",
+        className,
       )}
     >
-      <div className="flex gap-2 p-2 rounded-lg bg-primary group-hover:bg-primary-hover">
+      <div className="flex gap-2 rounded-lg bg-primary p-2 group-hover:bg-primary-hover">
         <Icon className="size-6 text-brand" />
         <div className="text-primary">{label}</div>
       </div>
     </button>
   );
 }
-
 
 export function SearchSuggestions({ input }: SearchSuggestionsProps) {
   return (
