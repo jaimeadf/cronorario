@@ -7,8 +7,10 @@ import { Header } from "./_components/header";
 
 import { ClassCatalog } from "./_components/class-catalog";
 import { MyClasses } from "./_components/my-classes";
+import { MySchedule } from "./_components/my-schedule";
 
 import { ClassesProvider } from "./_contexts/classes-context";
+import { FiltersProvider } from "./_contexts/filters-context";
 
 enum TabId {
   Catalog,
@@ -19,7 +21,7 @@ enum TabId {
 const tabs = {
   [TabId.Catalog]: ClassCatalog,
   [TabId.MyClasses]: MyClasses,
-  [TabId.MySchedule]: () => null,
+  [TabId.MySchedule]: MySchedule,
 };
 
 export default function Home() {
@@ -32,7 +34,7 @@ export default function Home() {
   }
 
   return (
-    <div>
+    <div className="flex h-screen w-screen flex-col overflow-auto">
       <Header>
         <Header.Menu>
           <Header.Menu.LinkItem
@@ -54,9 +56,9 @@ export default function Home() {
         </Header.TabBar>
       </Header>
       <ClassesProvider>
-        <main>
+        <FiltersProvider>
           <SelectedTab />
-        </main>
+        </FiltersProvider>
       </ClassesProvider>
     </div>
   );

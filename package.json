@@ -4,10 +4,15 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "website:dev": "nx run website:dev",
-    "website:build": "nx run website:build",
-    "website:lint": "nx run website:lint",
-    "website:format": "nx run website:format"
+    "website:dev": "nx run @cronorario/website:dev",
+    "website:build": "nx run @cronorario/website:build",
+    "website:start": "nx run @cronorario/website:start",
+    "website:lint": "nx run @cronorario/website:lint",
+    "website:format": "nx run @cronorario/website:format",
+    "scraper:build": "nx run @cronorario/scraper:build",
+    "scraper:start": "nx run @cronorario/scraper:start",
+    "scraper:format": "nx run @cronorario/scraper:format",
+    "core:build": "nx run @cronorario/core:build"
   },
   "keywords": [],
   "author": "",

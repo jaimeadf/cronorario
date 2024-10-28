@@ -1,17 +1,26 @@
-import { CSSProperties, useRef, useState } from "react";
+import { CSSProperties, useEffect, useRef, useState } from "react";
 import { Search } from "react-feather";
 
 import { cn } from "@/lib/utils";
 
 import { SearchSuggestions } from "./search-suggestions";
+import { useFilters } from "@/app/_contexts/filters-context";
 
 interface SearchInputProps {
   expand?: boolean;
+  value?: string;
+  onChange?: (value: string) => void;
   onFocus?: () => void;
   onBlur?: () => void;
 }
 
-function SearchInput({ expand, onFocus, onBlur }: SearchInputProps) {
+function SearchInput({
+  expand,
+  value,
+  onFocus,
+  onBlur,
+  onChange,
+}: SearchInputProps) {
   return (
     <div className="sticky inset-0 flex bg-primary p-2">
       <div className="relative flex-1">
@@ -22,14 +31,18 @@ function SearchInput({ expand, onFocus, onBlur }: SearchInputProps) {
           type="text"
           placeholder="Cursos, disciplinas, docentes..."
           className="block h-10 w-full rounded-lg bg-tertiary p-2 pl-10 text-base text-primary placeholder:text-tertiary focus:outline-none"
+          value={value}
           onFocus={onFocus}
-          onBlurCapture={onBlur}
+          onBlur={onBlur}
+          onChange={(e) => onChange?.(e.target.value)}
         />
       </div>
       <button
         className={cn(
           "max-w-0 overflow-hidden text-brand transition-all duration-100 ease-linear",
-          { "max-w-20": expand },
+          {
+            "max-w-20": expand,
+          },
         )}
       >
         <span className="pl-2">Cancelar</span>
@@ -39,7 +52,11 @@ function SearchInput({ expand, onFocus, onBlur }: SearchInputProps) {
 }
 
 export function SearchBar() {
+  const { searchQuery } = useFilters();
+
   const [expand, setExpand] = useState(false);
+  const [input, setInput] = useState("");
+
   const [containerOffset, setContainerOffset] = useState(0);
 
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -47,6 +64,7 @@ export function SearchBar() {
   function open() {
     const rect = containerRef?.current?.getBoundingClientRect();
 
+    setInput("");
     setExpand(true);
     setContainerOffset(rect?.top ?? 0);
   }
@@ -54,6 +72,11 @@ export function SearchBar() {
   function close() {
     setExpand(false);
     setContainerOffset(0);
+  }
+
+  function handleInputChange(value: string) {
+    console.log("change", value)
+    setInput(value);
   }
 
   return (
@@ -71,9 +94,15 @@ export function SearchBar() {
             { "max-h-[calc(var(--vvh)*100)] overflow-scroll": expand },
           )}
         >
-          <SearchInput expand={expand} onFocus={open} onBlur={close} />
+          <SearchInput
+            expand={expand}
+            value={expand ? input : searchQuery}
+            onFocus={open}
+            onBlur={close}
+            onChange={handleInputChange}
+          />
           <div className="p-2">
-            <SearchSuggestions input="hello" />
+            <SearchSuggestions query={input} />
           </div>
         </div>
       </div>

@@ -45,7 +45,9 @@ export function Tab({ id, icon, badge }: TabProps) {
       className={cn(
         "relative rounded-lg bg-tertiary text-primary",
         "hover:bg-tertiary-hover",
-        { "bg-brand text-onbrand hover:bg-brand": selected },
+        {
+          "bg-brand text-onbrand hover:bg-brand": selected,
+        },
       )}
       onClick={onTabSelect?.bind(null, id)}
     >

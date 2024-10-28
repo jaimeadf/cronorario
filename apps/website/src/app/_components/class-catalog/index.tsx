@@ -1,42 +1,60 @@
 import { useEffect, useState } from "react";
 
-import { CourseClass, useClasses } from "../../_contexts/classes-context";
+import { useClasses } from "../../_contexts/classes-context";
 
 import { Toolbar } from "./toolbar";
 import { ClassAccordion } from "./class-accordion";
+import { UniversityClass, UniversitySubject } from "@cronorario/core";
+import { useFilters } from "@/app/_contexts/filters-context";
+
+export interface SubjectGroup {
+  subject: UniversitySubject;
+  classes: UniversityClass[];
+}
 
 export function ClassCatalog() {
-  const [groups, setGroups] = useState<Record<string, CourseClass[]>>({});
+  const { classes, getSubject } = useClasses();
+  const { searchQuery } = useFilters();
 
-  const { classes } = useClasses();
+  const [groups, setGroups] = useState<SubjectGroup[]>([]);
 
   useEffect(() => {
-    const groups = {} as Record<string, CourseClass[]>;
+    const map = new Map<number, UniversityClass[]>();
 
-    for (const c of classes.slice(0, 1000)) {
-      if (!Object.hasOwn(groups, c.subject.id)) {
-        groups[c.subject.id] = [];
+    const filteredClasses = Array.from(classes.values()).filter((classs) => {
+      const subject = getSubject(classs.subjectId)!;
+
+      return subject.description.toLowerCase().startsWith(searchQuery.toLowerCase())
+        || subject.code.toLowerCase().startsWith(searchQuery.toLowerCase());
+    });
+
+    for (const classs of filteredClasses) {
+      if (!map.has(classs.subjectId)) {
+        map.set(classs.subjectId, []);
       }
 
-      groups[c.subject.id].push(c);
+      map.get(classs.subjectId)!.push(classs);
     }
 
-    console.log(groups);
+    const groups = Array.from(map.entries()).map(([subjectId, classes]) => ({
+      subject: getSubject(subjectId)!,
+      classes,
+    }));
 
-    setGroups(groups);
-  }, [classes]);
+    setGroups(groups.slice(0, 100));
+  }, [classes, searchQuery]);
 
   return (
     <div>
       <Toolbar />
       <div className="p-2">
         <div className="w-full border-t border-secondary">
-          {Object.entries(groups).map(([subjectId, group = []]) => (
+          {groups.map((group, index) => (
             <ClassAccordion
-              key={subjectId}
-              title={group[0].subject.description}
-              subtitle={`${group[0].subject.code} • ${group[0].subject.workload}h • ${group.length} turmas`}
-              classes={group}
+              key={index}
+              title={group.subject.description}
+              subtitle={`${group.subject.code} • ${group.subject.workload}h • ${group.classes.length} turmas`}
+              classes={group.classes}
             />
           ))}
         </div>

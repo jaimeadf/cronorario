@@ -24,7 +24,7 @@ export default function RootLayout({
       <VisualDimensions />
       <html lang="en">
         <body
-          className={cn(inter.className, "h-full overflow-scroll antialiased")}
+          className={cn(inter.className, "h-full overflow-hidden antialiased")}
         >
           {children}
         </body>

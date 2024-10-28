@@ -25,7 +25,7 @@ const config: Config = {
         onbrand: colors.white,
       },
       borderColor: {
-        primary: colors.gray[200],
+        primary: colors.gray[300],
         secondary: colors.gray[100],
         brand: colors.rose[500],
         ontertiary: colors.white,

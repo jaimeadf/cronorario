@@ -1,14 +1,16 @@
 import { ReactNode } from "react";
 
 import { cn } from "@/lib/utils";
-import { CourseClass } from "../../_contexts/classes-context";
+import { Bookmark } from "react-feather";
+import { UniversityClass, UniversityTimeSlot } from "@cronorario/core";
+import { useClasses } from "@/app/_contexts/classes-context";
 
 interface ClassScheduleProps {
-  information: CourseClass;
+  schedule: UniversityTimeSlot[];
 }
 
 interface ClassCardProps {
-  information: CourseClass;
+  classs: UniversityClass;
 }
 
 interface ClassSectionProps {
@@ -26,17 +28,17 @@ function ClassSection({ children, className, title }: ClassSectionProps) {
   );
 }
 
-function ClassSchedule({ information }: ClassScheduleProps) {
+function ClassSchedule({ schedule }: ClassScheduleProps) {
   return (
     <table className="max-w-80 text-nowrap">
       <tbody>
-        {information.schedule.map((s) => (
-          <tr key={s.id}>
-            <td>{s.weekDay}</td>
+        {schedule.map((slot, index) => (
+          <tr key={index}>
+            <td>{slot.dayOfWeek}</td>
             <td className="w-full text-center">
-              {s.startTime} - {s.endTime}
+              {slot.startTime} - {slot.endTime}
             </td>
-            <td>{s.type}</td>
+            <td>{slot.type}</td>
           </tr>
         ))}
       </tbody>
@@ -44,35 +46,44 @@ function ClassSchedule({ information }: ClassScheduleProps) {
   );
 }
 
-export function ClassCard({ information }: ClassCardProps) {
+export function ClassCard({ classs }: ClassCardProps) {
+  const { getCourse, getTeacher, getCurriculum, getCourseVersion } = useClasses();
+
+  const curriculum = getCurriculum(classs.curriculumId)!;
+  const courseVersion = getCourseVersion(curriculum.courseVersionId)!;
+  const course = getCourse(courseVersion.courseId)!;
+  const teachers = classs.teacherIds.map((teacherId) => getTeacher(teacherId)!);
+
   return (
     <div className="rounded-lg border border-primary">
       <div className="flex items-center justify-between border-b border-primary p-4">
-        <h4 className="text-primary">Turma {information.code}</h4>
-        <div className="size-8 rounded-lg bg-tertiary" />
+        <h4 className="text-primary">Turma {classs.code}</h4>
+        <button className="flex size-10 items-center justify-center rounded-lg hover:bg-primary-hover">
+          <Bookmark className="size-6 text-brand" fill="none" />
+        </button>
       </div>
       <div className="grid grid-cols-2 gap-4 p-4">
         <ClassSection className="col-span-full" title="Curso">
-          {information.course.name}
+          {course.name}
         </ClassSection>
         <ClassSection className="col-span-full" title="Estrutura">
-          {information.idealPeriod}º semestre
+          {curriculum.idealPeriod}º semestre
         </ClassSection>
         <ClassSection title="Vagas ofertadas">
-          {information.oferredSeats}
+          {classs.offeredSeats}
         </ClassSection>
         <ClassSection title="Vagas ocupadas">
-          {information.occupiedSeats}
+          {classs.occupiedSeats}
         </ClassSection>
         <ClassSection className="col-span-full" title="Docentes">
           <ul>
-            {information.teachers.map((teacher) => (
+            {teachers.map((teacher) => (
               <li key={teacher.id}>{teacher.name}</li>
             ))}
           </ul>
         </ClassSection>
         <ClassSection className="col-span-full" title="Horários">
-          <ClassSchedule information={information} />
+          <ClassSchedule schedule={classs.schedule} />
         </ClassSection>
       </div>
     </div>

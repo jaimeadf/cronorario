@@ -7,16 +7,16 @@ import {
 } from "react";
 import { ChevronLeft } from "react-feather";
 
+import { UniversityClass } from "@cronorario/core";
+
 import { cn } from "@/lib/utils";
 
 import { ClassCard } from "./class-card";
 
-import { CourseClass } from "../../_contexts/classes-context";
-
 interface ClassAccordionProps {
   title: ReactNode;
   subtitle: ReactNode;
-  classes: CourseClass[];
+  classes: UniversityClass[];
 }
 
 export function ClassAccordion({
@@ -52,7 +52,9 @@ export function ClassAccordion({
         <ChevronLeft
           className={cn(
             "size-10 rounded-lg p-2 transition-transform duration-300 ease-in-out",
-            { "-rotate-90": expand },
+            {
+              "-rotate-90": expand,
+            },
           )}
         />
       </button>
@@ -68,8 +70,8 @@ export function ClassAccordion({
           className="grid grid-cols-[repeat(auto-fill,minmax(18rem,1fr))] gap-8 pb-8 pt-4"
           onResize={refreshBodyHeight}
         >
-          {classes.map((c) => (
-            <ClassCard key={c.id} information={c} />
+          {classes.map((classs) => (
+            <ClassCard key={classs.id} classs={classs} />
           ))}
         </div>
       </div>

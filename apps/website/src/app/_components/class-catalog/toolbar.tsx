@@ -11,7 +11,7 @@ export function Toolbar() {
       <SearchBar />
       <FilterBar>
         <FilterButton icon={Sliders} value="Filtros" />
-        <FilterDropdown icon={Database} value="2023 - 2" />
+        <FilterDropdown icon={Database} value="2024 - 2" />
         <FilterDropdown icon={MapPin} value="Campus Camobi - Santa Maria" />
       </FilterBar>
     </div>
