@@ -47,7 +47,8 @@ function ClassSchedule({ schedule }: ClassScheduleProps) {
 }
 
 export function ClassCard({ classs }: ClassCardProps) {
-  const { getCourse, getTeacher, getCurriculum, getCourseVersion } = useClasses();
+  const { getCourse, getTeacher, getCurriculum, getCourseVersion } =
+    useClasses();
 
   const curriculum = getCurriculum(classs.curriculumId)!;
   const courseVersion = getCourseVersion(curriculum.courseVersionId)!;

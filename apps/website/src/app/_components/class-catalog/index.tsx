@@ -24,8 +24,12 @@ export function ClassCatalog() {
     const filteredClasses = Array.from(classes.values()).filter((classs) => {
       const subject = getSubject(classs.subjectId)!;
 
-      return subject.description.toLowerCase().startsWith(searchQuery.toLowerCase())
-        || subject.code.toLowerCase().startsWith(searchQuery.toLowerCase());
+      return (
+        subject.description
+          .toLowerCase()
+          .startsWith(searchQuery.toLowerCase()) ||
+        subject.code.toLowerCase().startsWith(searchQuery.toLowerCase())
+      );
     });
 
     for (const classs of filteredClasses) {
@@ -41,7 +45,7 @@ export function ClassCatalog() {
       classes,
     }));
 
-    setGroups(groups.slice(0, 100));
+    setGroups(groups.slice(0, 1000));
   }, [classes, searchQuery]);
 
   return (

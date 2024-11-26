@@ -34,32 +34,34 @@ export default function Home() {
   }
 
   return (
-    <div className="flex h-screen w-screen flex-col overflow-auto">
-      <Header>
-        <Header.Menu>
-          <Header.Menu.LinkItem
-            icon={GitHub}
-            label="GitHub"
-            href="https://github.com/jaimeadf/cronorario"
-            target="_blank"
-          />
-          <Header.Menu.ButtonItem icon={Sun} label="Modo Escuro" />
-        </Header.Menu>
-        <Header.Logo />
-        <Header.TabBar
-          selectedTabId={selectedTabId}
-          onTabSelect={handleTabSelect}
-        >
-          <Header.Tab icon={Search} id={TabId.Catalog} />
-          <Header.Tab icon={Calendar} id={TabId.MySchedule} />
-          <Header.Tab icon={CheckCircle} id={TabId.MyClasses} badge={4} />
-        </Header.TabBar>
-      </Header>
-      <ClassesProvider>
-        <FiltersProvider>
-          <SelectedTab />
-        </FiltersProvider>
-      </ClassesProvider>
+    <div className="h-screen overflow-y-scroll">
+      <div className="flex flex-col min-h-screen">
+        <Header>
+          <Header.Menu>
+            <Header.Menu.LinkItem
+              icon={GitHub}
+              label="GitHub"
+              href="https://github.com/jaimeadf/cronorario"
+              target="_blank"
+            />
+            <Header.Menu.ButtonItem icon={Sun} label="Modo Escuro" />
+          </Header.Menu>
+          <Header.Logo />
+          <Header.TabBar
+            selectedTabId={selectedTabId}
+            onTabSelect={handleTabSelect}
+          >
+            <Header.Tab icon={Search} id={TabId.Catalog} />
+            <Header.Tab icon={Calendar} id={TabId.MySchedule} />
+            <Header.Tab icon={CheckCircle} id={TabId.MyClasses} badge={4} />
+          </Header.TabBar>
+        </Header>
+        <ClassesProvider>
+          <FiltersProvider>
+            <SelectedTab />
+          </FiltersProvider>
+        </ClassesProvider>
+      </div>
     </div>
   );
 }

@@ -79,7 +79,7 @@ function TimeGridColumnHeading({
     <div
       {...props}
       className={cn(
-        "sticky top-0 z-10 flex h-10 items-center justify-center",
+        "sticky top-0 z-10 flex h-14 items-center justify-center",
         "border-b border-primary bg-primary",
         "font-medium text-primary",
         className,
@@ -291,7 +291,7 @@ export function TimeGrid({ timelines, events }: TimeGridProps) {
     <TimeGridContext.Provider
       value={{ viewHeight, viewTimeTicks, viewTimeRange }}
     >
-      <div className="relative flex-1 overflow-auto">
+      <div className="relative flex-1 overflow-x-auto overflow-y-hidden">
         <div className="relative flex min-w-min">
           <TimeGridTimeColumn />
           {Object.entries(groups).map(([timeline, groups]) => (
