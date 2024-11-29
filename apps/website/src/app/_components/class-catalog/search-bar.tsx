@@ -12,8 +12,10 @@ import { Book, Icon, Search, User } from "react-feather";
 
 import { cn } from "@/lib/utils";
 
-import { useFilters } from "@/app/_contexts/filters-context";
-import { useClasses } from "@/app/_contexts/classes-context";
+import { EntityTargetKind, useFilters } from "@/app/_contexts/filters-context";
+import { useUniversity } from "@/app/_contexts/university-context";
+
+import { useBodyScrollBlock } from "@/app/_contexts/body-scroll-context";
 
 const MAXIMUM_SUGGESTIONS = 5;
 
@@ -33,7 +35,7 @@ interface SearchSuggestionItem {
 interface SearchContextProps {
   term: string;
   suggestions: SearchSuggestionItem[];
-  isExpanded: boolean;
+  expanded: boolean;
   open(): void;
   close(): void;
 }
@@ -59,19 +61,19 @@ const SearchContext = createContext<SearchContextProps>(
 
 function SearchInput({ onChange }: SearchInputProps) {
   const { searchQuery } = useFilters();
-  const { term, isExpanded, open, close } = useContext(SearchContext);
+  const { term, expanded, open, close } = useContext(SearchContext);
 
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
     if (inputRef.current != null) {
-      if (isExpanded) {
+      if (expanded) {
         inputRef.current.focus();
       } else {
         inputRef.current.blur();
       }
     }
-  }, [isExpanded]);
+  }, [expanded]);
 
   return (
     <div className="sticky top-0 flex bg-primary p-2">
@@ -88,7 +90,7 @@ function SearchInput({ onChange }: SearchInputProps) {
             "text-base text-primary placeholder:text-tertiary",
             "focus:outline-none",
           )}
-          value={isExpanded ? term : searchQuery}
+          value={expanded ? term : searchQuery}
           onFocus={open}
           onChange={(e) => onChange?.(e.target.value)}
         />
@@ -98,7 +100,7 @@ function SearchInput({ onChange }: SearchInputProps) {
         className={cn(
           "max-w-0 overflow-hidden text-brand",
           "transition-all duration-300 ease-in-out",
-          { "max-w-20": isExpanded },
+          { "max-w-20": expanded },
         )}
         onClick={close}
       >
@@ -134,8 +136,12 @@ function SearchSuggestionButton({
         className,
       )}
     >
-      <div className={cn("flex gap-2 rounded-lg bg-primary p-2",
-      "group-hover:bg-primary-hover")}>
+      <div
+        className={cn(
+          "flex gap-2 rounded-lg bg-primary p-2",
+          "group-hover:bg-primary-hover",
+        )}
+      >
         <Icon className="size-6 text-brand" />
         <div className="text-left text-primary">{label}</div>
       </div>
@@ -144,14 +150,14 @@ function SearchSuggestionButton({
 }
 
 export function SearchSuggestions() {
-  const { suggestions, isExpanded } = useContext(SearchContext);
+  const { suggestions, expanded } = useContext(SearchContext);
 
-  function renderItem(item: SearchSuggestionItem) {
+  function renderItem(item: SearchSuggestionItem, index: number) {
     switch (item.kind) {
       case SearchSuggestionKind.Query:
         return (
           <SearchSuggestionButton
-            key={item.label}
+            key={index}
             icon={Search}
             label={item.label}
             onClick={item.onSelect}
@@ -160,7 +166,7 @@ export function SearchSuggestions() {
       case SearchSuggestionKind.Course:
         return (
           <SearchSuggestionButton
-            key={item.label}
+            key={index}
             icon={Book}
             label={item.label}
             onClick={item.onSelect}
@@ -169,7 +175,7 @@ export function SearchSuggestions() {
       case SearchSuggestionKind.Teacher:
         return (
           <SearchSuggestionButton
-            key={item.label}
+            key={index}
             icon={User}
             label={item.label}
             onClick={item.onSelect}
@@ -180,51 +186,27 @@ export function SearchSuggestions() {
     }
   }
 
-  if (!isExpanded) {
+  if (!expanded) {
     return null;
   }
 
   return (
-    <div className="flex flex-col border-t border-secondary p-2">
+    <div className="mt-2 flex flex-col border-t border-secondary">
       {suggestions.map(renderItem)}
     </div>
   );
 }
 
 export function SearchBar() {
-  const { teachers, courses } = useClasses();
-  const { selectedSiteId, setSearchQuery, addCourseFilter, addTeacherFilter } =
-    useFilters();
+  const { teachers, courses } = useUniversity();
+  const { selectedSiteId, setSearchQuery, addEntityTarget } = useFilters();
 
-  const [topOffset, setTopOffset] = useState(0);
+  const [offsetTop, setOffsetTop] = useState(0);
 
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [expanded, setExpanded] = useState(false);
   const [term, setTerm] = useState("");
 
   const containerRef = useRef<HTMLDivElement | null>(null);
-
-  function open() {
-    const rect = containerRef?.current?.getBoundingClientRect();
-
-    setTopOffset(rect?.top ?? 0);
-    setIsExpanded(true);
-    setTerm("");
-  }
-
-  function close() {
-    setTopOffset(0);
-    setIsExpanded(false);
-  }
-
-  function handleTermChange(value: string) {
-    setTerm(value);
-  }
-
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    setSearchQuery(term);
-    close();
-  }
 
   const suggestions = useMemo(() => {
     function handleQuerySuggestionSelect() {
@@ -232,13 +214,13 @@ export function SearchBar() {
       close();
     }
 
-    function handleTeacherSuggestionSelect(teacherId: number) {
-      addTeacherFilter(teacherId);
+    function handleCourseSuggestionSelect(courseId: number) {
+      addEntityTarget({ kind: EntityTargetKind.Course, id: courseId });
       close();
     }
 
-    function handleCourseSuggestionSelect(courseId: number) {
-      addCourseFilter(courseId);
+    function handleTeacherSuggestionSelect(teacherId: number) {
+      addEntityTarget({ kind: EntityTargetKind.Teacher, id: teacherId });
       close();
     }
 
@@ -282,16 +264,40 @@ export function SearchBar() {
     teachers,
     selectedSiteId,
     setSearchQuery,
-    addCourseFilter,
-    addTeacherFilter,
+    addEntityTarget,
   ]);
+
+  useBodyScrollBlock(expanded);
+
+  function open() {
+    const rect = containerRef?.current?.getBoundingClientRect();
+
+    setOffsetTop(rect?.top ?? 0);
+    setExpanded(true);
+    setTerm("");
+  }
+
+  function close() {
+    setOffsetTop(0);
+    setExpanded(false);
+  }
+
+  function handleTermChange(value: string) {
+    setTerm(value);
+  }
+
+  function handleTermSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setSearchQuery(term);
+    close();
+  }
 
   return (
     <SearchContext.Provider
       value={{
         term,
         suggestions,
-        isExpanded,
+        expanded,
         open,
         close,
       }}
@@ -299,18 +305,18 @@ export function SearchBar() {
       <div ref={containerRef} className="h-14">
         <form
           className={cn(
-            "h-14 overflow-y-auto bg-primary",
-            "transition-[transform,height] duration-300 ease-in-out",
+            "h-14 bg-primary",
+            "transition-[transform,height] duration-200 ease-in-out",
             {
-              "fixed h-[calc(var(--vvh)*100)] w-[calc(var(--vvw)*100)]":
-                isExpanded,
+              "fixed h-[calc(var(--vvh)*100)] w-[calc(var(--vvw)*100)] overflow-y-scroll overscroll-contain":
+                expanded,
             },
           )}
           style={{
-            top: topOffset,
-            transform: `translateY(-${topOffset}px)`,
+            top: offsetTop,
+            transform: `translateY(-${offsetTop}px)`,
           }}
-          onSubmit={handleSubmit}
+          onSubmit={handleTermSubmit}
         >
           <SearchInput onChange={handleTermChange} />
           <SearchSuggestions />

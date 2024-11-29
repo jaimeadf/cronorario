@@ -1,0 +1,1 @@
+export const RESOURCE_BASE_URL = process.env.NEXT_PUBLIC_RESOURCE_BASE_URL;

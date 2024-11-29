@@ -1,6 +1,17 @@
+export interface UniversitySite {
+  id: number;
+  name: string;
+}
+
 export interface UniversityTerm {
   year: number;
   period: number;
+}
+
+export interface UniversityTime {
+  hours: number;
+  minutes: number;
+  seconds: number;
 }
 
 export interface UniversityCourse {
@@ -15,7 +26,7 @@ export interface UniversityCourseVersion {
   id: number;
   number: string;
   description: string;
-  status: string;
+  // status: string;
   courseId: number;
 }
 
@@ -23,7 +34,7 @@ export interface UniversitySubject {
   id: number;
   code: string;
   description: string;
-  status: string;
+  // status: string;
   credits: number;
   workload: number;
 }
@@ -54,15 +65,52 @@ export interface UniversityClass {
   offeredSeats: number;
   occupiedSeats: number;
   curriculumId: number;
+  courseId: number;
+  subjectId: number;
   teacherIds: number[];
   schedule: UniversityTimeSlot[];
 }
 
-export interface UniversityDataSet {
-  courses: UniversityCourse[];
-  courseVersions: UniversityCourseVersion[];
-  subjects: UniversitySubject[];
-  curricula: UniversityCurriculum[];
-  teachers: UniversityTeacher[];
+export interface UniversityClassFrame {
+  term: UniversityTerm;
   classes: UniversityClass[];
 }
+
+export function parseUniversityTime(time: string): UniversityTime {
+  const [hours, minutes, seconds] = time.split(":").map(Number);
+
+  return { hours, minutes, seconds };
+}
+
+export function getTermsPath() {
+  return "terms.json";
+}
+
+export function getSitesPath() {
+  return "sites.json";
+}
+
+export function getCoursesPath() {
+  return "courses.json";
+}
+
+export function getCourseVersionsPath() {
+  return "course-versions.json";
+}
+
+export function getCurriculaPath() {
+  return "curricula.json";
+}
+
+export function getTeachersPath() {
+  return "teachers.json";
+}
+
+export function getSubjectsPath() {
+  return "subjects.json";
+}
+
+export function getFramePath(term: UniversityTerm) {
+  return `frames/${term.year}-${term.period}.json`;
+}
+

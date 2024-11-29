@@ -1,38 +1,29 @@
 import {
+  UniversityTerm,
+  UniversityClass,
+  UniversityClassFrame,
+  getFramePath,
+} from "@cronorario/core";
+import {
   createContext,
-  ReactNode,
   useContext,
   useEffect,
   useState,
+  type ReactNode,
 } from "react";
-import {
-  UniversityClass,
-  UniversityCourse,
-  UniversityCourseVersion,
-  UniversityCurriculum,
-  UniversityDataSet,
-  UniversitySubject,
-  UniversityTeacher,
-} from "@cronorario/core";
+import { useUniversity } from "./university-context";
 
-import unknownDataSet from "@/assets/data-set.json";
+import { RESOURCE_BASE_URL } from "@/lib/environment";
 
 interface ClassesContextProps {
-  courses: Map<number, UniversityCourse>;
-  courseVersions: Map<number, UniversityCourseVersion>;
-  subjects: Map<number, UniversitySubject>;
-  teachers: Map<number, UniversityTeacher>;
-  curriculums: Map<number, UniversityCurriculum>;
+  activeTerm: UniversityTerm;
   classes: Map<number, UniversityClass>;
 
-  getCourse(courseId: number): UniversityCourse | undefined;
-  getCourseVersion(
-    courseVersionId: number,
-  ): UniversityCourseVersion | undefined;
-  getSubject(subjectId: number): UniversitySubject | undefined;
-  getTeacher(teacherId: number): UniversityTeacher | undefined;
-  getCurriculum(curriculumId: number): UniversityCurriculum | undefined;
-  getClass(classId: number): UniversityClass | undefined;
+  isClassesLoading: boolean;
+
+  setActiveTerm(term: UniversityTerm): void;
+
+  getClass(id: number): UniversityClass | undefined;
 }
 
 interface ClassesProviderProps {
@@ -42,103 +33,63 @@ interface ClassesProviderProps {
 const ClassesContext = createContext({} as ClassesContextProps);
 
 export function ClassesProvider({ children }: ClassesProviderProps) {
-  const [courses, setCourses] = useState(new Map<number, UniversityCourse>());
-  const [courseVersions, setCourseVersions] = useState(
-    new Map<number, UniversityCourseVersion>(),
+  const { terms } = useUniversity();
+
+  const [activeTerm, setActiveTerm] = useState<UniversityTerm>({
+    year: 0,
+    period: 0,
+  });
+  const [classes, setClasses] = useState<Map<number, UniversityClass>>(
+    new Map(),
   );
-  const [subjects, setSubjects] = useState(
-    new Map<number, UniversitySubject>(),
-  );
-  const [teachers, setTeachers] = useState(
-    new Map<number, UniversityTeacher>(),
-  );
-  const [curriculums, setCurriculums] = useState(
-    new Map<number, UniversityCurriculum>(),
-  );
-  const [classes, setClasses] = useState(new Map<number, UniversityClass>());
-
-  function getCourse(courseId: number) {
-    return courses.get(courseId);
-  }
-
-  function getCourseVersion(courseVersionId: number) {
-    return courseVersions.get(courseVersionId);
-  }
-
-  function getSubject(subjectId: number) {
-    return subjects.get(subjectId);
-  }
-
-  function getTeacher(teacherId: number) {
-    return teachers.get(teacherId);
-  }
-
-  function getCurriculum(curriculumId: number) {
-    return curriculums.get(curriculumId);
-  }
+  const [isClassesLoading, setIsClassesLoading] = useState(false);
 
   function getClass(classId: number) {
     return classes.get(classId);
   }
 
   useEffect(() => {
-    const universityDataSet = unknownDataSet as UniversityDataSet;
-
-    const newCourses = new Map<number, UniversityCourse>();
-    const newCourseVersions = new Map<number, UniversityCourseVersion>();
-    const newSubjects = new Map<number, UniversitySubject>();
-    const newTeachers = new Map<number, UniversityTeacher>();
-    const newCurriculums = new Map<number, UniversityCurriculum>();
-    const newClasses = new Map<number, UniversityClass>();
-
-    for (const course of universityDataSet.courses) {
-      newCourses.set(course.id, course);
+    if (activeTerm.year === 0 || activeTerm.period === 0) {
+      return;
     }
 
-    for (const courseVersion of universityDataSet.courseVersions) {
-      newCourseVersions.set(courseVersion.id, courseVersion);
-    }
+    const controller = new AbortController();
 
-    for (const subject of universityDataSet.subjects) {
-      newSubjects.set(subject.id, subject);
-    }
+    setIsClassesLoading(true);
 
-    for (const teacher of universityDataSet.teachers) {
-      newTeachers.set(teacher.id, teacher);
-    }
+    fetch(`${RESOURCE_BASE_URL}/${getFramePath(activeTerm)}`, {
+      signal: controller.signal,
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        const frame: UniversityClassFrame = data;
+        const classes = new Map<number, UniversityClass>(
+          frame.classes.map((c) => [c.id, c]),
+        );
 
-    for (const curriculum of universityDataSet.curricula) {
-      newCurriculums.set(curriculum.id, curriculum);
-    }
+        setClasses(classes);
+      })
+      .catch((error) => {
+        console.error(error);
+      })
+      .finally(() => {
+        setIsClassesLoading(false);
+      });
 
-    for (const classs of universityDataSet.classes) {
-      newClasses.set(classs.id, classs);
-    }
+    return () => {
+      controller.abort();
+    };
+  }, [activeTerm]);
 
-    setCourses(newCourses);
-    setCourseVersions(newCourseVersions);
-    setSubjects(newSubjects);
-    setTeachers(newTeachers);
-    setCurriculums(newCurriculums);
-    setClasses(newClasses);
-  }, []);
+  useEffect(() => {
+    if (terms.length > 0) {
+      setActiveTerm(terms[0]);
+    }
+  }, [terms]);
 
   return (
     <ClassesContext.Provider
-      value={{
-        courses,
-        courseVersions,
-        subjects,
-        teachers,
-        curriculums,
-        classes,
-        getCourse,
-        getCourseVersion,
-        getSubject,
-        getTeacher,
-        getCurriculum,
-        getClass,
-      }}
+      value={{ activeTerm, classes, isClassesLoading, setActiveTerm, getClass }}
     >
       {children}
     </ClassesContext.Provider>

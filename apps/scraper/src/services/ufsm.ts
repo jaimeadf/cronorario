@@ -1,3 +1,5 @@
+import * as cheerio from "cheerio";
+
 const UFSM_HOME_BASE_URL = "https://www.ufsm.br";
 const UFSM_PORTAL_BASE_URL = "https://portal.ufsm.br";
 
@@ -15,6 +17,29 @@ export async function discoverCourseIds() {
   const courseURLs = JSON.parse(match.groups!.json);
 
   return Object.keys(courseURLs);
+}
+
+export async function discoverSiteNames() {
+  const response = await fetch(`${UFSM_HOME_BASE_URL}/disciplinas/`);
+  const html = await response.text();
+
+  const $ = cheerio.load(html);
+
+  const select = $("select#ementario-busca-oferta-presencial-select-polos");
+  const options = select.find("option");
+
+  const sites: Record<string, string> = {};
+
+  options.each((_, option) => {
+    const value = $(option).attr("value");
+    const text = $(option).text();
+
+    if (value && text) {
+      sites[value] = text;
+    }
+  });
+
+  return sites;
 }
 
 export async function fetchCourseCurrentPeriod(courseId: string) {

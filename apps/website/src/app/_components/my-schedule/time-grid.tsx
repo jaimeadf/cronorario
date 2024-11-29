@@ -54,6 +54,8 @@ export interface TimeGridEvent {
   description: string;
   timeline: string;
   time: TimeGridRelativeTimeRange;
+  textColor: string;
+  backgroundColor: string;
 }
 
 const TimeGridContext = createContext({} as TimeGridContextProps);
@@ -120,14 +122,31 @@ function TimeGridEventCard({ event }: TimeGridEventCardProps) {
 
   const height = positionBottom - positionTop;
 
+  function formatTotalMinutes(totalMinutes: number) {
+    const hours = Math.floor(totalMinutes / MINUTES_PER_HOUR);
+    const minutes = totalMinutes % MINUTES_PER_HOUR;
+
+    return `${hours}:${minutes}`;
+  }
+
   return (
     <div
-      className="absolute left-0 right-0 flex flex-col gap-1 rounded-lg border border-l-8 border-green-500 bg-primary p-2 text-sm text-green-500"
-      style={{ top: `${positionTop}px`, height: `${height}px` }}
+      className="absolute left-0 right-0 rounded-lg border border-l-8 border-current bg-primary p-2 text-sm"
+      style={{
+        top: `${positionTop}px`,
+        height: `${height}px`,
+        color: event.textColor,
+        backgroundColor: event.backgroundColor,
+      }}
     >
-      <h3 className="font-semibold">Organização de Computadores</h3>
-      <p>Teórica</p>
-      <p>08:00 - 10:00</p>
+      <div className="flex h-full w-full flex-col flex-wrap gap-y-0.5 overflow-hidden">
+        <h3 className="w-full font-semibold">{event.title}</h3>
+        <p className="w-full">{event.description}</p>
+        <p className="w-full">
+          {formatTotalMinutes(event.time.startMinutes)} -{" "}
+          {formatTotalMinutes(event.time.endMinutes)}
+        </p>
+      </div>
     </div>
   );
 }
@@ -198,7 +217,7 @@ const TimeGridTimeRulers = forwardRef<HTMLDivElement, TimeGridTimeRulersProps>(
         ref={ref}
         {...props}
         className={cn(
-          "absolute bottom-2 left-0 right-0 top-10 -z-10 flex flex-col",
+          "absolute bottom-2 left-0 right-0 top-14 -z-10 flex flex-col",
           className,
         )}
       >
@@ -265,7 +284,7 @@ export function TimeGrid({ timelines, events }: TimeGridProps) {
     }
 
     for (const event of events) {
-      let availableGroup = groups[event.timeline]?.find(
+      const availableGroup = groups[event.timeline]?.find(
         (t) => !hasConflictingEvent(event.time, t),
       );
 
@@ -291,7 +310,7 @@ export function TimeGrid({ timelines, events }: TimeGridProps) {
     <TimeGridContext.Provider
       value={{ viewHeight, viewTimeTicks, viewTimeRange }}
     >
-      <div className="relative flex-1 overflow-x-auto overflow-y-hidden">
+      <div className="relative flex-1">
         <div className="relative flex min-w-min">
           <TimeGridTimeColumn />
           {Object.entries(groups).map(([timeline, groups]) => (

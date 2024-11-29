@@ -18,6 +18,7 @@
   },
   "dependencies": {
     "@cronorario/core": "workspace:*",
+    "cheerio": "^1.0.0",
     "commander": "^12.1.0"
   }
 }

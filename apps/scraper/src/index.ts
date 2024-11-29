@@ -1,10 +1,9 @@
-import fs from "fs/promises";
 import { Command } from "commander";
 
 import { UniversityTermArgument, parseTermArgument } from "./arguments";
 
 import { scrape } from "./actions/scrape";
-import { format } from "./actions/format";
+import { compile } from "./actions/compile";
 
 const program = new Command();
 
@@ -30,25 +29,12 @@ program
   )
   .action(
     async (terms: UniversityTermArgument[], options: { output: string }) => {
-      const artifacts = await scrape(terms);
-
-      for (let i = 0; i < artifacts.length; i++) {
-        const artifact = artifacts[i];
-        const path = options.output
-          .replace("{YEAR}", artifact.term.year.toString())
-          .replace("{PERIOD}", artifact.term.period.toString())
-          .replace("{COURSE_ID}", artifact.courseId.toString());
-
-        console.info(
-          `[INFO] Writing scraping artifact to ${path}... (${i + 1}/${artifacts.length})`,
-        );
-        await fs.writeFile(path, JSON.stringify(artifact));
-      }
+      await scrape(terms, options.output);
     },
   );
 
 program
-  .command("format")
+  .command("compile")
   .description(
     "Convert raw class from the UFSM website data into structured data.",
   )
@@ -56,20 +42,9 @@ program
     "-o, --output <path>",
     "The output file path for the structured class data.",
   )
-  .argument("<inputs...>", "One or more raw class data artifacts to format.")
-  .action(async (inputs: string[], options: { output: string }) => {
-    console.info(`[INFO] Reading scraping artifacts...`);
-    const artifacts = await Promise.all(
-      inputs.map((input) => fs.readFile(input, "utf-8").then(JSON.parse)),
-    );
-
-    console.info(`[INFO] Formatting scraping artifacts...`);
-    const dataset = format(artifacts);
-
-    console.info(
-      `[INFO] Writing structured class data to ${options.output}...`,
-    );
-    await fs.writeFile(options.output, JSON.stringify(dataset));
+  .argument("<input>", "The directory containing the scraping artifacts.")
+  .action(async (input: string, options: { output: string }) => {
+    await compile(input, options.output);
   });
 
 program.parse(process.argv);

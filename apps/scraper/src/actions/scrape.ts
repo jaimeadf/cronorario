@@ -1,14 +1,19 @@
+import path from "path";
+
 import { UniversityTerm } from "@cronorario/core";
 
-import {
-  UniversityTermArgumentKind,
-  UniversityTermArgument,
-} from "../arguments";
 import {
   discoverCourseIds,
   fetchCourseCurrentPeriod,
   fetchCourseSubjectsByPeriod,
 } from "../services/ufsm";
+
+import {
+  UniversityTermArgumentKind,
+  UniversityTermArgument,
+} from "../arguments";
+
+import { writeJsonFile } from "../io";
 
 export interface ScrapingArtifact {
   timestamp: number;
@@ -17,11 +22,8 @@ export interface ScrapingArtifact {
   result: any;
 }
 
-export async function scrape(termArguments: UniversityTermArgument[]) {
-  const artifacts: ScrapingArtifact[] = [];
-
+export async function scrape(termArguments: UniversityTermArgument[], filePathTemplate: string) {
   console.info("[INFO] Discovering course IDs...");
-
   const rawCourseIds = await discoverCourseIds();
   const courseIds = rawCourseIds.map((id) => parseInt(id));
 
@@ -56,11 +58,15 @@ export async function scrape(termArguments: UniversityTermArgument[]) {
         result: payload,
       };
 
-      artifacts.push(artifact);
+      let filePath = filePathTemplate;
+      filePath = filePath.replace("{YEAR}", term.year.toString());
+      filePath = filePath.replace("{PERIOD}", term.period.toString());
+      filePath = filePath.replace("{COURSE_ID}", courseId.toString());
+
+      console.info(`[INFO] Writing artifact to ${path.basename(filePath)}...`);
+      await writeJsonFile(filePath, artifact);
     }
   }
-
-  return artifacts;
 }
 
 async function resolveTermArgument(

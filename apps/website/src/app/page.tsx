@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Search, Calendar, CheckCircle, GitHub, Sun } from "react-feather";
+import { Search, Calendar, CheckCircle, GitHub } from "react-feather";
 
 import { Header } from "./_components/header";
 
@@ -9,8 +9,11 @@ import { ClassCatalog } from "./_components/class-catalog";
 import { MyClasses } from "./_components/my-classes";
 import { MySchedule } from "./_components/my-schedule";
 
-import { ClassesProvider } from "./_contexts/classes-context";
+import { BodyScrollLatchProvider } from "./_contexts/body-scroll-context";
+import { UniversityProvider } from "./_contexts/university-context";
 import { FiltersProvider } from "./_contexts/filters-context";
+import { UserProvider, useUser } from "./_contexts/user-context";
+import { ClassesProvider, useClasses } from "./_contexts/classes-context";
 
 enum TabId {
   Catalog,
@@ -24,44 +27,62 @@ const tabs = {
   [TabId.MySchedule]: MySchedule,
 };
 
-export default function Home() {
+function App() {
+  const { activeTerm } = useClasses();
+  const { getSelectedClassIds } = useUser();
+
   const [selectedTabId, setSelectedTabId] = useState(TabId.Catalog);
 
   const SelectedTab = tabs[selectedTabId];
+  const selectedClassIds = getSelectedClassIds(activeTerm);
 
   function handleTabSelect(id: string | number) {
     setSelectedTabId(id as TabId);
   }
 
   return (
-    <div className="h-screen overflow-y-scroll">
-      <div className="flex flex-col min-h-screen">
-        <Header>
-          <Header.Menu>
-            <Header.Menu.LinkItem
-              icon={GitHub}
-              label="GitHub"
-              href="https://github.com/jaimeadf/cronorario"
-              target="_blank"
-            />
-            <Header.Menu.ButtonItem icon={Sun} label="Modo Escuro" />
-          </Header.Menu>
-          <Header.Logo />
-          <Header.TabBar
-            selectedTabId={selectedTabId}
-            onTabSelect={handleTabSelect}
-          >
-            <Header.Tab icon={Search} id={TabId.Catalog} />
-            <Header.Tab icon={Calendar} id={TabId.MySchedule} />
-            <Header.Tab icon={CheckCircle} id={TabId.MyClasses} badge={4} />
-          </Header.TabBar>
-        </Header>
+    <div className="flex min-h-screen flex-col">
+      <Header>
+        <Header.Menu>
+          <Header.Menu.LinkItem
+            icon={GitHub}
+            label="GitHub"
+            href="https://github.com/jaimeadf/cronorario"
+            target="_blank"
+          />
+          {/* <Header.Menu.ButtonItem icon={Sun} label="Modo Escuro" /> */}
+        </Header.Menu>
+        <Header.Logo />
+        <Header.TabBar
+          selectedTabId={selectedTabId}
+          onTabSelect={handleTabSelect}
+        >
+          <Header.Tab icon={Search} id={TabId.Catalog} />
+          <Header.Tab icon={Calendar} id={TabId.MySchedule} />
+          <Header.Tab
+            icon={CheckCircle}
+            id={TabId.MyClasses}
+            badge={selectedClassIds.length > 0 ? selectedClassIds.length : null}
+          />
+        </Header.TabBar>
+      </Header>
+      <SelectedTab />
+    </div>
+  );
+}
+
+export default function Home() {
+  return (
+    <BodyScrollLatchProvider>
+      <UniversityProvider>
         <ClassesProvider>
           <FiltersProvider>
-            <SelectedTab />
+            <UserProvider>
+              <App />
+            </UserProvider>
           </FiltersProvider>
         </ClassesProvider>
-      </div>
-    </div>
+      </UniversityProvider>
+    </BodyScrollLatchProvider>
   );
 }
