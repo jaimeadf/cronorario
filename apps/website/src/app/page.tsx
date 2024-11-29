@@ -43,15 +43,15 @@ function App() {
   return (
     <div className="flex min-h-screen flex-col">
       <Header>
-        <Header.Menu>
+        {/* <Header.Menu>
           <Header.Menu.LinkItem
             icon={GitHub}
             label="GitHub"
             href="https://github.com/jaimeadf/cronorario"
             target="_blank"
           />
-          {/* <Header.Menu.ButtonItem icon={Sun} label="Modo Escuro" /> */}
-        </Header.Menu>
+          <Header.Menu.ButtonItem icon={Sun} label="Modo Escuro" />
+        </Header.Menu> */}
         <Header.Logo />
         <Header.TabBar
           selectedTabId={selectedTabId}
