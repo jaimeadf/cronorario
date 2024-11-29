@@ -57,6 +57,10 @@ export function Toolbar() {
     setSelectedSiteId(site.id);
   }
 
+  function formatTerm(term: UniversityTerm) {
+    return `${term.year} - ${term.period - 100}`;
+  }
+
   function renderEntityTarget(target: EntityTarget) {
     switch (target.kind) {
       case EntityTargetKind.Course:
@@ -89,7 +93,7 @@ export function Toolbar() {
         {/* <FilterAction icon={Sliders} label="Filtros" /> */}
         <FilterDropdown
           icon={Database}
-          label={`${activeTerm.year} - ${activeTerm.period}`}
+          label={formatTerm(activeTerm)}
           open={termOpen}
           onOpen={handleTermOpen}
           onClose={handleTermClose}
@@ -102,7 +106,7 @@ export function Toolbar() {
               }
               onSelect={() => handleTermSelect(term)}
             >
-              {`${term.year} - ${term.period}`}
+              {formatTerm(term)}
             </FilterDropdown.Item>
           ))}
         </FilterDropdown>
