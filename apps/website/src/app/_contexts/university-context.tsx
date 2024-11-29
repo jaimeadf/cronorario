@@ -126,13 +126,15 @@ export function UniversityProvider({ children }: UniversityProviderProps) {
         loadResource<UniversityTeacher[]>(getTeachersPath()),
       ]);
 
-      setTerms(terms.sort((a, b) => {
-        if (a.year !== b.year) {
-          return b.year - a.year;
-        }
+      setTerms(
+        terms.sort((a, b) => {
+          if (a.year !== b.year) {
+            return b.year - a.year;
+          }
 
-        return b.period - a.period;
-      }));
+          return b.period - a.period;
+        }),
+      );
       setSites(new Map(sites.map((site) => [site.id, site])));
       setCourses(new Map(courses.map((course) => [course.id, course])));
       setCourseVersions(

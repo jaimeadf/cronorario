@@ -1,9 +1,4 @@
-import {
-  createContext,
-  useContext,
-  useLayoutEffect,
-  useState,
-} from "react";
+import { createContext, useContext, useLayoutEffect, useState } from "react";
 
 interface BodyScrollLatchContextProps {
   isBodyScrollBlocked: boolean;

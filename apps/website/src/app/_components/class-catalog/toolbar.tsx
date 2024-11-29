@@ -14,11 +14,7 @@ import { useUniversity } from "@/app/_contexts/university-context";
 import { useClasses } from "@/app/_contexts/classes-context";
 
 import { SearchBar } from "./search-bar";
-import {
-  FilterBar,
-  FilterDropdown,
-  FilterTag,
-} from "./filter-bar";
+import { FilterBar, FilterDropdown, FilterTag } from "./filter-bar";
 
 export function Toolbar() {
   const { terms, sites, getSite, getCourse, getTeacher } = useUniversity();

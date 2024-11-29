@@ -93,7 +93,15 @@ export function ClassList() {
     }));
 
     setGroups(groups);
-  }, [classes, searchQuery, selectedSiteId, selectedEntityTargets, getSelectedEntityTargetsOfKind, getCourse, getSubject]);
+  }, [
+    classes,
+    searchQuery,
+    selectedSiteId,
+    selectedEntityTargets,
+    getSelectedEntityTargetsOfKind,
+    getCourse,
+    getSubject,
+  ]);
 
   function handleAccordionToggle(index: number) {
     setGroups((prev) =>

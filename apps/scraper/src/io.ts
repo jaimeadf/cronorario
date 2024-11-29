@@ -9,7 +9,10 @@ export async function readJsonFile<T>(filePath: string): Promise<T> {
   return JSON.parse(await fs.readFile(filePath, "utf-8"));
 }
 
-export async function writeJsonFile<T>(filePath: string, data: T): Promise<void> {
+export async function writeJsonFile<T>(
+  filePath: string,
+  data: T,
+): Promise<void> {
   const dirPath = path.dirname(filePath);
 
   if (dirPath) {

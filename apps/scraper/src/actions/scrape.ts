@@ -22,7 +22,10 @@ export interface ScrapingArtifact {
   result: any;
 }
 
-export async function scrape(termArguments: UniversityTermArgument[], filePathTemplate: string) {
+export async function scrape(
+  termArguments: UniversityTermArgument[],
+  filePathTemplate: string,
+) {
   console.info("[INFO] Discovering course IDs...");
   const rawCourseIds = await discoverCourseIds();
   const courseIds = rawCourseIds.map((id) => parseInt(id));

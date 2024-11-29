@@ -48,7 +48,7 @@ export async function compile(inputDirPath: string, outputDirPath: string) {
   for (const artifactFilename of artifactFilenames) {
     console.info(`[INFO] Compiling artifact from ${artifactFilename}...`);
 
-    const artifactPath = path.join(inputDirPath, artifactFilename); 
+    const artifactPath = path.join(inputDirPath, artifactFilename);
     const artifact = await readJsonFile<ScrapingArtifact>(artifactPath);
 
     if (artifact.result.error) {
@@ -72,8 +72,10 @@ export async function compile(inputDirPath: string, outputDirPath: string) {
           const rawClassSubject = rawClass.disciplina;
           const rawClassCurriculum = rawClass.disciplinaCurriculo;
 
-          const rawClassCurriculumCourseVersion = rawClassCurriculum.estrutura.versaoCurso;
-          const rawClassCurriculumCourse = rawClassCurriculumCourseVersion.curso;
+          const rawClassCurriculumCourseVersion =
+            rawClassCurriculum.estrutura.versaoCurso;
+          const rawClassCurriculumCourse =
+            rawClassCurriculumCourseVersion.curso;
           const rawClassTeachers = rawClass.docentes;
 
           const classs = formatClass(rawClass, artifact.term);
@@ -81,22 +83,30 @@ export async function compile(inputDirPath: string, outputDirPath: string) {
           const classSubject = formatSubject(rawClassSubject);
           const classCurriculum = formatCurriculum(rawClassCurriculum);
           const classCurriculumCourseVersion = formatCourseVersion(
-            rawClassCurriculumCourseVersion
+            rawClassCurriculumCourseVersion,
           );
           const classCurriculumCourse = formatCourse(rawClassCurriculumCourse);
           const classTeachers: UniversityTeacher[] = rawClassTeachers.map(
-            (rawTeacher: any) => formatTeacher(rawTeacher)
+            (rawTeacher: any) => formatTeacher(rawTeacher),
           );
 
           classes.set(classs.id, classs, timestamp);
 
           courses.set(classCourse.id, classCourse, timestamp);
-          courses.set(classCurriculumCourse.id, classCurriculumCourse, timestamp);
+          courses.set(
+            classCurriculumCourse.id,
+            classCurriculumCourse,
+            timestamp,
+          );
 
           subjects.set(classSubject.id, classSubject, timestamp);
 
           curricula.set(classCurriculum.id, classCurriculum, timestamp);
-          courseVersions.set(classCurriculumCourseVersion.id, classCurriculumCourseVersion, timestamp);
+          courseVersions.set(
+            classCurriculumCourseVersion.id,
+            classCurriculumCourseVersion,
+            timestamp,
+          );
 
           for (const teacher of classTeachers) {
             teachers.set(teacher.id, teacher, timestamp);
@@ -105,7 +115,7 @@ export async function compile(inputDirPath: string, outputDirPath: string) {
       }
     }
   }
-  
+
   console.info(`[INFO] Writing compiled data...`);
   const sitesPath = path.join(outputDirPath, getSitesPath());
   const termsPath = path.join(outputDirPath, getTermsPath());
