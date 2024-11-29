@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Search, Calendar, CheckCircle, GitHub } from "react-feather";
+import { Search, Calendar, CheckCircle } from "react-feather";
 
 import { Header } from "./_components/header";
 
