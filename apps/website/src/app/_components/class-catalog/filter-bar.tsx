@@ -145,5 +145,5 @@ FilterDropdown.Item = function FilterDropdownItem({
 };
 
 export function FilterBar({ children }: FilterBarProps) {
-  return <div className="flex gap-2 overflow-x-scroll px-2">{children}</div>;
+  return <div className="flex gap-2 overflow-x-scroll px-2 pb-2">{children}</div>;
 }

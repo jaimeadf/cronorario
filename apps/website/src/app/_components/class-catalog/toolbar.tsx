@@ -87,7 +87,7 @@ export function Toolbar() {
   }
 
   return (
-    <div className={cn("sticky inset-0 z-10 bg-primary pb-2")}>
+    <div className={cn("sticky inset-0 z-10 bg-primary w-screen")}>
       <SearchBar />
       <FilterBar>
         {/* <FilterAction icon={Sliders} label="Filtros" /> */}
